@@ -1,49 +1,71 @@
-class Graph { 
-    constructor(noOfVertices) { 
-        this.noOfVertices = noOfVertices; 
-        this.AdjList = new Map(); 
-    } 
+const Graph = function() {
+  this.container = {};
+  this.girth = 0;
+};
 
-    addNode(v) { 
-        this.AdjList.set(v, []); 
-    } 
+Graph.prototype.add = function (value) {
+  this.container[value] = {};
+  this.girth ++;
+};
 
-    addEdge(v, w) { 
-        this.AdjList.get(v).push(w); 
-        this.AdjList.get(w).push(v); 
-    } 
+Graph.prototype.addLink = function(start, end) {
+  this.container[start][end] = true;
+  this.container[end][start] = true;
+};
 
-    getNodes() { 
-    let get_keys = this.AdjList.keys(); 
-  
-    for (let i of get_keys)  
-{ 
-        let get_values = this.AdjList.get(i); 
-        let conc = ""; 
+Graph.prototype.deleteLink = function(start, end) {
+  delete this.container[start][end];
+  delete this.container[end][start];
+};
 
-        for (let j of get_values) 
-            conc += j + " "; 
-  
-        console.log(i + " -> " + conc); 
-    } 
-} 
-} 
+Graph.prototype.checkConnection = function(start, end) {
+  return this.container[start].hasOwnProperty(end);
+};
 
+Graph.prototype.contains = function(value) {
+  return this.container.hasOwnProperty(value);
+};
 
-var g = new Graph(6); 
-var vertices = [ 'A', 'B', 'C', 'D', 'E', 'F' ]; 
-  
-for (var i = 0; i < vertices.length; i++) { 
-    g.addNode(vertices[i]); 
-} 
+Graph.prototype.deleteValue = function(value) {
+  console.log(this.container[value]);
+  delete this.container[value];
+  this.girth --;
+  for(let entry in this.container) {
+    if (this.container[entry][value]) {
+      delete this.container[entry] [value];
+    }
+  }
+};
 
-g.addEdge('A', 'B'); 
-g.addEdge('A', 'D'); 
-g.addEdge('A', 'E'); 
-g.addEdge('B', 'C'); 
-g.addEdge('D', 'E'); 
-g.addEdge('E', 'F'); 
-g.addEdge('E', 'C'); 
-g.addEdge('C', 'F'); 
+let myGraph = new Graph();
 
-g.getNodes(); 
+myGraph.add('Sony');
+myGraph.add('PS1');
+myGraph.add('PS2');
+myGraph.add('PS3');
+myGraph.add('PS4');
+myGraph.add('Microsoft');
+myGraph.add('Xbox');
+myGraph.add('Xbox360');
+myGraph.add('XboxONE');
+myGraph.add('Nintendo');
+myGraph.add('SNES');
+myGraph.add('NES');
+myGraph.add('Gameboy');
+
+myGraph.addLink('Sony','PS1');
+myGraph.addLink('Sony','PS2');
+myGraph.addLink('Sony','PS3');
+myGraph.addLink('Sony','PS4');
+myGraph.addLink('Microsoft','Xbox');
+myGraph.addLink('Microsoft','Xbox360');
+myGraph.addLink('Microsoft','XboxONE');
+myGraph.addLink('Nintendo','NES');
+myGraph.addLink('Nintendo','SNES');
+myGraph.addLink('Nintendo','Gameboy');
+
+myGraph.deleteLink('Microsoft', 'Xbox');
+myGraph.deleteValue('Microsoft');
+
+console.log(myGraph);
+
